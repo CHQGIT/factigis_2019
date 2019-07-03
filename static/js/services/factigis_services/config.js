@@ -1,5 +1,5 @@
-//v1.9d
-//25.06.2019 : E.H.R
+//v1.10p
+//01-07-2019 : E.H.R
 //DEV MODE, internal services.
 
 const env = {
@@ -54,10 +54,26 @@ const env = {
   SAVEAPPLICATIONMODULE: "FACTIGIS_PROD",
   SAVEAPPLICATIONNAME: 'REACT_FACTIGIS_PROD',
   BUILDFOR: "INTERNA",
-  VERSION: "_V1.9(PROV)",
+  VERSION: "_V1.10(PROV)",
   SSL: 'http://'
 }
 */
+
+//PROD MODE - EXTERNO CON ssl
+/*const env = {
+  ROOT: "css/",
+  CSSDIRECTORY: 'css/', //using
+  ROUTEPATH: '/FACTIGIS',
+  ENVIRONMENT: 'PRODUCTION',
+  WEBSERVERADDRESS: "",
+  SAVEAPPLICATIONMODULE: "FACTIGIS_PROD",
+  SAVEAPPLICATIONNAME: 'REACT_FACTIGIS_PROD',
+  BUILDFOR: "INTERNA",
+  VERSION: "_V1.10(PROV)",
+  SSL: 'https://'
+}
+*/
+
 
 //prod mode: interno : app interna, servidor VARCGISPROD.
 

@@ -79,7 +79,7 @@ class FactigisCarta extends React.Component {
      let usrProf = cookieHandler.get('usrprfl');
  
      var c = factigis_findFolio(folio, cb => {
-       
+       console.log(cb,"folio");
        this.setState({
          potencia: cb[0].attributes.Potencia,
          nivelTension: (cb[0].attributes.Tipo_empalme == 'MT') ? 'Media Tensión' : 'Baja Tensión',
@@ -203,7 +203,7 @@ class FactigisCarta extends React.Component {
         </div>
 
         <div className="cert_parrafo2">
-          <p className="">Según los antecedentes indicados por el cliente, la presente certificación de factbilidad no requiere de estudios para determinar la necesidad de obras adicionales.</p>
+          <p className="">Según los antecedentes indicados por el cliente, la presente certificación de factibilidad no requiere de estudios para determinar la necesidad de obras adicionales.</p>
           <p>Adicionalmente, se informan los niveles de corto circuito de la SED {nombreSed}:</p>
         </div>
 
