@@ -1,7 +1,7 @@
 //v1.10p
 //01-07-2019 : E.H.R
 //DEV MODE, internal services.
-
+/*
 const env = {
   ROOT: "static/css/",
   CSSDIRECTORY: 'static/css/', //using
@@ -13,7 +13,7 @@ const env = {
   BUILDFOR: "INTERNA",
   SSL: 'https://'
 }
-
+*/
 //Dev mode, external services.
 /*
 const env = {
@@ -75,7 +75,23 @@ const env = {
 */
 
 
-//prod mode: interno : app interna, servidor VARCGISPROD.
+//prod mode: interno : app interna, servidor VARCGISPROD sin SSL.
+
+
+const env = {
+  ROOT: "css/",
+  CSSDIRECTORY: 'css/',
+  ROUTEPATH: '/FACTIGIS',
+  ENVIRONMENT: 'PRODUCTION',
+  WEBSERVERADDRESS: "",
+  SAVEAPPLICATIONMODULE: "FACTIGIS_PROD",
+  SAVEAPPLICATIONNAME: 'REACT_FACTIGIS_PROD',
+  SSL: 'http://',
+  BUILDFOR: "INTERNA"
+}
+
+
+//prod mode: interno : app interna, servidor VARCGISPROD con SSL.
 
 /*
 const env = {

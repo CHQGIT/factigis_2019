@@ -224,7 +224,7 @@ class Factigis_Add extends React.Component {
   }
 
   componentDidMount(){
-    //console.log(cookieHandler.get('usrprmssns'), "Permisos")
+   
     /*
     var d = cookieHandler.get('wllExp');
       if(d > getFormatedDate()){
@@ -494,7 +494,7 @@ class Factigis_Add extends React.Component {
 
           //validar factibilidad.
           var zones = factigis_validator(g.mapPoint, (callbackMain)=>{
-            console.log("zonas:", callbackMain);
+            //console.log("zonas:", callbackMain);
             this.setState({
               factCartaComuna: comunaa,
               zonaConcesion: callbackMain.zonaConcesion,
@@ -603,10 +603,10 @@ class Factigis_Add extends React.Component {
             }
             //30/11
             this.setState({factigisPropiedadPoste: featureSetFeatures[0].attributes['propiedad']});
-            console.log("propiedad poste:", featureSetFeatures[0].attributes['propiedad']);
+            //console.log("propiedad poste:", featureSetFeatures[0].attributes['propiedad']);
             //verificar si el rotulo es particular/otro u empresa: si es empresa, la factibilidad es normal, si es particular/otro, es asistida.
             if((featureSetFeatures[0].attributes['propiedad']=="Particular") || (featureSetFeatures[0].attributes['propiedad']=="Empresa que no presta Servicio Distribucion") ){
-              console.log("poste es ",featureSetFeatures[0].attributes['propiedad'], featureSetFeatures);
+              //console.log("poste es ",featureSetFeatures[0].attributes['propiedad'], featureSetFeatures);
               this.setState({factiTipoFactibilidad: 'FACTIBILIDAD ASISTIDA'});
             }else{
               ////console.log("poste es empresa" ,featureSetFeatures[0].attributes['propiedad'], featureSetFeatures);
@@ -621,12 +621,12 @@ class Factigis_Add extends React.Component {
             map.graphics.add(new esri.Graphic(line,lineSymbol));
             //10.5.2018: agregar validacion para dejar asistidos los empalmes que intersecten linea de
             this.setState({factigis_lineaCP: line});
-            console.log(this.state.factigis_lineaCP,"linea cp");
+            //console.log(this.state.factigis_lineaCP,"linea cp");
             //extrae datos de rotulo
             let rotulo = featureSetFeatures[0].attributes['rotulo'];
             var sed = featureSetFeatures[0].attributes['sed'];
             let alimentador = featureSetFeatures[0].attributes['alimentador'];
-            console.log(sed,"tengo SED EN 0?")
+            //console.log(sed,"tengo SED EN 0?")
             this.setState({
               factigis_geoPoste: featureSetFeatures[0].geometry,
               factigisRotulo: rotulo,
@@ -1050,7 +1050,7 @@ class Factigis_Add extends React.Component {
       
         //Si no hay problemas de zonas, pasa a factibilidad NORMAL (directa), transitoriamente ya que esto puede cambiar dentro de la función de guardado.
         //FACTIBILIDAD NORMAL
-        console.log("Problemas zonas encontrados", factArr);
+        //console.log("Problemas zonas encontrados", factArr);
         if(!factArr.length){
           //primeros campos a definir para agregar (se agregan más luego en la otra función addNuevaFactibilidad)
           myFact = {
@@ -1150,11 +1150,11 @@ class Factigis_Add extends React.Component {
 
         //FACTIBILIDAD ASISTIDA: cuando hay problemas con las zonas
         }else{
-          console.log(this.state, this.state.factigis_sed,"tengo esto asignado en asistidas")
+          //console.log(this.state, this.state.factigis_sed,"tengo esto asignado en asistidas")
           let fArr = [];
           //26/1/2017: BUG: problemas con las direcciones largas.
           if(this.state.factigisDireccion.length>=75){
-            console.log("problemas de dirección en largo.", this.state.factigisDireccion.length);
+            //console.log("problemas de dirección en largo.", this.state.factigisDireccion.length);
             this.setState({
               open: true,
               problemsforAdding: 'La dirección para la factibilidad excede el largo (75) permitido. No se puede agregar.',  numeroFactibilidad: '',
@@ -1208,7 +1208,7 @@ class Factigis_Add extends React.Component {
               if($.inArray("transmision",factArr)>-1){
 
                 //no agregar
-                console.log("No agregar porque está dentro de zona transmisión y fuera de concesión");
+                //console.log("No agregar porque está dentro de zona transmisión y fuera de concesión");
                 this.setState({
                   open: true,
                   problemsforAdding: 'No se puede agregar porque está dentro de zona transmisión y fuera de concesión',
@@ -1269,7 +1269,7 @@ class Factigis_Add extends React.Component {
           if ($.inArray("transmision",factArr)>-1) {
 
               //en zona transmisión
-              console.log("No se puede agregar debido a que está en zona de transmisión, pese a que está dentro de la concesión");
+              //console.log("No se puede agregar debido a que está en zona de transmisión, pese a que está dentro de la concesión");
               this.setState({
                 open: true,
                 problemsforAdding: 'No se puede agregar debido a que está en zona de transmisión, pese a que está dentro de la concesión',
@@ -1327,7 +1327,7 @@ class Factigis_Add extends React.Component {
           //3.10.2015: agregar capa de zona restringida
           //En concesión y en zona restringida = Ingresar asistida.
           if($.inArray("restringida",factArr)>-1){
-            console.log("dentro de concesión pero en zona restringida");
+           // console.log("dentro de concesión pero en zona restringida");
             this.setState({
               open: true,
               problemsforAdding: 'Procesando factibilidad, espere un momento'
