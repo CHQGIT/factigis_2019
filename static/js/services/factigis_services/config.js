@@ -1,5 +1,5 @@
-//v1.10p
-//01-07-2019 : E.H.R
+//v1.11p
+//17-07-2019 : E.H.R
 //DEV MODE, internal services.
 /*
 const env = {
