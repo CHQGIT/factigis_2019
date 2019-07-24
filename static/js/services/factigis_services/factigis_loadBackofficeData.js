@@ -11,7 +11,7 @@ function loadCurrentUserData(dateRange, callback){
   var qFact = new esri.tasks.Query();
   //qFact.where = "Zona= '" + usrprfl.ZONA_USUARIO + "' AND Tipo_factibilidad = 'FACTIBILIDAD ASISTIDA' AND Estado_tramite <> 'CERRADA' AND EMPRESA='" + usrprfl.EMPRESA+ "'";
   //qFact.where = "Zona= '" + usrprfl.ZONA_USUARIO + "' AND Tipo_factibilidad = 'FACTIBILIDAD ASISTIDA' AND Estado_tramite <> 'CERRADA' AND EMPRESA='" + usrprfl.EMPRESA+ "' "+ dateRange;
-  qFact.where = "Zona= '" + usrprfl.ZONA_USUARIO + "' AND Tipo_factibilidad = 'FACTIBILIDAD ASISTIDA' AND (Estado_tramite = 'POR DEFINIR' OR Estado_tramite = 'NUEVA' ) AND EMPRESA='" + usrprfl.EMPRESA+ "' "+ dateRange;
+  qFact.where = "Zona= '" + usrprfl.ZONA_USUARIO + "' AND Tipo_factibilidad = 'FACTIBILIDAD ASISTIDA' AND Estado_tramite <> 'CERRADA' AND EMPRESA='" + usrprfl.EMPRESA+ "' "+ dateRange;
 
 
   qFact.returnGeometry = true;
