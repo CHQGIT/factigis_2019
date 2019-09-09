@@ -8,8 +8,8 @@ const env = {
   ROUTEPATH: '/',
   ENVIRONMENT: 'DEVELOPMENT',
   WEBSERVERADDRESS: "",
-  SAVEAPPLICATIONMODULE: "FACTIGIS_PROD",
-  SAVEAPPLICATIONNAME: 'REACT_FACTIGIS_PROD',
+  SAVEAPPLICATIONMODULE: "FACTIGIS_DESA",
+  SAVEAPPLICATIONNAME: 'REACT_FACTIGIS_DESA',
   BUILDFOR: "INTERNA",
   SSL: 'https://'
 }
@@ -30,7 +30,7 @@ const env = {
 */
 
 //TEST MODE - INTERNO (pruebas factigis)
-/*
+
 const env = {
   ROOT: "css/",
   CSSDIRECTORY: 'css/', //using
@@ -42,8 +42,8 @@ const env = {
   BUILDFOR: "EXTERNA",
   SSL: 'https://'
 }
-*/
 
+/*
 //PROD MODE - EXTERNO sin ssl
 const env = {
   ROOT: "css/",
@@ -58,7 +58,7 @@ const env = {
   SSL: 'http://'
 }
 
-
+*/
 //PROD MODE - EXTERNO CON ssl
 /*const env = {
   ROOT: "css/",
@@ -69,8 +69,25 @@ const env = {
   SAVEAPPLICATIONMODULE: "FACTIGIS_PROD",
   SAVEAPPLICATIONNAME: 'REACT_FACTIGIS_PROD',
   BUILDFOR: "INTERNA",
-  VERSION: "_V1.10(PROV)",
+  VERSION: "_V1.12(PROV)",
   SSL: 'https://'
+}
+*/
+
+//desa mode: interno : app interna, servidor VARCGISPROD sin SSL.
+
+/*
+const env = {
+  ROOT: "css/",
+  CSSDIRECTORY: 'css/',
+  ROUTEPATH: '/FACTIGIS',
+  ENVIRONMENT: 'DEVELOPMENT',
+  WEBSERVERADDRESS: "",
+  SAVEAPPLICATIONMODULE: "FACTIGIS_DESA",
+  SAVEAPPLICATIONNAME: 'REACT_FACTIGIS_DESA',
+  SSL: 'http://',
+  VERSION: "_V1.10(PROV)",
+  BUILDFOR: "INTERNA"
 }
 */
 

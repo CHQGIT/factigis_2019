@@ -57,7 +57,7 @@ function find_folioData(folio, callback){
 }
 
 function updateAttributesPerFolio(d,callback){
-
+  console.log(d,"uodates")
   const data = {
     f: 'json',
     updates: JSON.stringify([{ attributes: d}]),
@@ -71,6 +71,7 @@ function updateAttributesPerFolio(d,callback){
     data: data
   })
     .done(d =>{
+      console.log(d,"tengo esto modificar")
       let json = JSON.parse(d);
       if( (_.has(json,'error')) ){
         return callback(false);
