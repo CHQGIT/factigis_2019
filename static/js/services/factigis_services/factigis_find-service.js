@@ -1,6 +1,7 @@
 import layers from '../../services/layers-service';
 import token from '../../services/token-service';
 import cookieHandler from 'cookie-handler';
+import {capitalize} from '../../services/login-service';
 
 function crearRectangulo(geometry,delta){
   var rectangulo = new esri.geometry.Polygon(new esri.SpatialReference(geometry.spatialReference));
@@ -33,7 +34,8 @@ function factigis_findDireccion(geometry,callback){
 }
 
 function factigis_findRotulo(geometry,callback){
-
+  var user = cookieHandler.get('usrprfl');
+  var empresaCapitalized = capitalize(user.EMPRESA.toString());
   var myRectangulo = crearRectangulo(geometry,1);
   var qTaskInterruptions = new esri.tasks.QueryTask(layers.read_rotulos2());
   var qInterruptions = new esri.tasks.Query();
@@ -42,7 +44,7 @@ function factigis_findRotulo(geometry,callback){
   qInterruptions.outFields=["*"];
   qInterruptions.geometry = myRectangulo;
   qInterruptions.spatialRelationship = esri.tasks.Query.SPATIAL_REL_INTERSECTS;
-  qInterruptions.where = "tipo_nodo = 'ele!poste' or tipo_nodo='ele!camara'";
+  qInterruptions.where = "tipo_nodo = 'ele!poste' or tipo_nodo='ele!camara' and empresa = '"+ empresaCapitalized + "'";
   qTaskInterruptions.execute(qInterruptions, (featureSet)=>{
     console.log(featureSet.features, "findrotulo")
     if(!featureSet.features.length){
@@ -268,14 +270,16 @@ function factigis_findFolio(folio, callback){
 }
 
 function factigis_findRotuloByNumber(numero, tipo, callback){
-  console.log(numero,tipo,layers.read_rotulos2());
+  
+  var user = cookieHandler.get('usrprfl');
+  var empresaCapitalized = capitalize(user.EMPRESA.toString());
   //tipo_nodo ='ele!camara' and rotulo='B8380'
   var qTaskInterruptions = new esri.tasks.QueryTask(layers.read_rotulos2());
   var qInterruptions = new esri.tasks.Query();
 
   qInterruptions.returnGeometry = true;
   qInterruptions.outFields=["*"];
-  qInterruptions.where = "tipo_nodo= '"+ tipo +"'AND rotulo ='"+ numero +"'";
+  qInterruptions.where = "tipo_nodo= '"+ tipo +"'AND rotulo ='"+ numero +"' and empresa = '"+ empresaCapitalized +"'";
   qTaskInterruptions.execute(qInterruptions, (featureSet)=>{
     console.log(featureSet);
     if(!featureSet.features.length){

@@ -16,7 +16,7 @@ import LayerList from '../../components/LayerList.jsx';
 import {loadCurrentHistoryData, loadFactStates} from '../../services/factigis_services/factigis_loadBackOfficeStates.js';
 import _ from 'lodash';
 import BasemapToggle from "esri/dijit/BasemapToggle";
-import {saveGisredLogin, getFormatedDate} from '../../services/login-service';
+import {saveGisredLogin, getFormatedDate, capitalize} from '../../services/login-service';
 import {factigis_findSedProperties, factigis_findRotuloProperties } from  '../../services/factigis_services/factigis_dynamicElementQuery';
 import {factigis_findRotulo} from '../../services/factigis_services/factigis_find-service';
 import { updateAttributesPerFolio} from '../../services/factigis_services/factigis_loadBackofficeData';
@@ -403,7 +403,9 @@ class FactigisBackOfficeH extends React.Component {
   }
 
   componentDidMount(){
-      const user = cookieHandler.get('usrprfl')
+    var user = cookieHandler.get('usrprfl');
+    var empresaCapitalized = capitalize(user.EMPRESA.toString());
+
     /*
     var d = cookieHandler.get('wllExp');
       if(d > getFormatedDate()){
@@ -441,7 +443,7 @@ class FactigisBackOfficeH extends React.Component {
       layerRotulos.setImageFormat("png32");
       layerRotulos.setVisibleLayers([0]);
       var layerDefs = [];
-      layerDefs[0] = "tipo_nodo ='ele!poste' or tipo_nodo='ele!camara'";
+      layerDefs[0] = "tipo_nodo ='ele!poste' or tipo_nodo='ele!camara'  and nm_empresa='"+ empresaCapitalized+"'";
       layerRotulos.setLayerDefinitions(layerDefs);
       mapp.addLayer(layerRotulos);
 

@@ -16,21 +16,26 @@ function myLayers(){
   var serviceMain , serviceURL;
 
   if(env.BUILDFOR=="INTERNA"){
-    serviceMain = env.SSL+'gisredint.chilquinta.cl/arcgis/';
+    serviceMain = env.SSL+'gisredeo.chilquinta.cl/public/';
   }else{
-    serviceMain = env.SSL+'gisred.chilquinta.cl:6443/arcgis/';
+    serviceMain = env.SSL+'gisredeo.chilquinta.cl/public/';
   }
    serviceURL = serviceMain + 'rest/services/';
 
 
   return {
+    read_service_url(){
+      return serviceURL;
+    },
     //Get the token used in the whole app.
     read_tokenURL(){ //using
-      return serviceMain + "tokens/generateToken";
+      return "https://gisredeo.chilquinta.cl/portal/sharing/rest/generatetoken"
+      //return serviceMain + "tokens/generateToken";
     },
     //Reads the permissions for each module
     read_logAccess(){
-      return serviceURL + "Admin/LogAccesos/FeatureServer/2?f=json&token=" + token.read();
+      return serviceURL + "ADMIN/LogAccesos/FeatureServer/2?f=json&token=" + token.read();
+      //return serviceURL + "Admin/LogAccesos/FeatureServer/2";
     },
     //Shows the Chilquita Basemap for layerlist
     read_mapabase(){
@@ -40,94 +45,15 @@ function myLayers(){
     read_cartography(){
       return serviceURL + "Cartografia/DMPS/MapServer?f=json&token=" + token.read();
     },
-
-    //The following layers and services are just for Interruptions app. (interrupciones.html and interruptions.js)
-    //Featurelayer for orders per sed (with graphics)
-
-    read_layer_interr_sed(){ /*using : Layer: SED*/
-      return serviceURL + "Interrupciones/PO_test/MapServer/0?f=json&token=" + token.read();
-    },
-    //Featurelayer for orders per customer (with graphics)
-    read_layer_interr_clie(){ /*using: Layer Clientes*/
-      return serviceURL + "Interrupciones/PO_test/MapServer/1?f=json&token=" + token.read();
-    },
-    //Feature layer for BT: Red BT
-    read_layer_tramosBT(){ /*using Layer Tramos*/
-      return serviceURL + "Interrupciones/PO_test/MapServer/2?f=json&token=" + token.read();
-    },
-    //Feature layer for getting the nis affected in the SED (green points)
-    read_layer_ClienteSED(){ /*using Layer Cliente sed puntos verdes al extent*/
-      return serviceURL + "Interrupciones/PO_test/MapServer/3?f=json&token=" + token.read();
-    },
-    read_layer_CriticalCustomers(){ /*using Layer Cliente sed puntos verdes al extent*/
-      return serviceURL + "Interrupciones/PO_test/MapServer/4?f=json&token=" + token.read();
-    },
-    read_layer_CriticalPerSED(){ /*using Layer Cliente sed puntos verdes al extent*/
-      return serviceURL + "Interrupciones/PO_test/MapServer/5?f=json&token=" + token.read();
-    },
-    //Table for PO Orders (without graphics)
-    read_layer_poOrdenes(){ /*using*/
-      return serviceURL + "Interrupciones/Interrupciones_clientes/MapServer/8?f=json&token=" + token.read();
-    },
-    //Feature layer for customers data  : Clientes (0)
-    read_layer_ClieSED(){ /*using*/
-      return serviceURL + "Interrupciones/PO_test/MapServer/9?f=json&token=" + token.read();
-    },
-    read_layer_countTotal(){ /*using*/
-      return serviceURL + "Interrupciones/PO_test/MapServer/10?token=" + token.read();
-    },
     save_graphicLayer(myGraphicsLayer){  /*using*/
       graphicLayer = myGraphicsLayer;
     },
     read_graphicLayer(){  /*using*/
       return graphicLayer;
     },
-    read_dyn_layerClieSED(){  /*using*/
-        return serviceURL + "Interrupciones/PO_test/MapServer?f=json&token=" + token.read();
-    },
-    read_qtty_comuna(){  /*using*/
-        return serviceURL + "Interrupciones/PO_test/MapServer/11?f=json&token=" + token.read();
-    },
-    read_qtty_office(){  /*using*/
-        return serviceURL + "Interrupciones/PO_test/MapServer/12?f=json&token=" + token.read();
-    },
-    read_qtty_total_comuna(){  /*using*/
-        return serviceURL + "Interrupciones/PO_test/MapServer/13?f=json&token=" + token.read();
-    },
     write_logAccess(){  /*using*/
         return serviceURL + "Admin/LogAccesos/FeatureServer/1/applyEdits?f=json&token=" + token.read();
     },
-
-    //layers for AP CHQ
-    read_ap_comuna(){
-      return serviceURL + "AP_Municipal/AP_MUNICIPAL/MapServer/4?f=json&token=" + token.read();
-    },
-    //19-05-2016
-    read_ap_modificaciones(){
-      return serviceURL + "AP_Municipal/AP_MUNICIPAL/MapServer?f=json&token=" + token.read();
-    }/*,
-    read_ap_luminarias(){
-      return serviceURL + "AP_Municipal/AP_MUNICIPAL/FeatureServer/1?f=json&token=" + token.read();
-    },
-    */
-    ,
-    read_ap_luminarias(){
-      return serviceURL + "AP_Municipal/AP_MUNICIPAL/MapServer?f=json&token=" + token.read();
-    },
-    read_ap_luminariasQuery(){
-      return serviceURL + "AP_Municipal/AP_MUNICIPAL/FeatureServer/1?f=json&token=" + token.read();
-    },
-    //20/05/2016
-    read_ap_equipos(){
-        return serviceURL + "AP_Municipal/AP_MUNICIPAL/MapServer/3?f=json&token=" + token.read();
-    },
-    read_ap_tramos(){
-        return serviceURL + "AP_Municipal/AP_MUNICIPAL/MapServer/2?f=json&token=" + token.read();
-    },
-    read_ap_catastro_fotos(){
-        return serviceURL + "AP_Municipal/AP_MUNICIPAL/FeatureServer/10?f=json&token=" + token.read();
-    },
-
     /* FACTIGIS LAYERS*/
     read_factigis_transmision(){
         return serviceURL + "Varios/FACTIBILIDAD/MapServer/0?f=json&token=" + token.read();
@@ -187,10 +113,7 @@ function myLayers(){
       return serviceURL + "FACTIBILIDAD/"+env.SAVEAPPLICATIONMODULE+"/FeatureServer/0/applyedits";
     },
     read_logAccessFactigis(){
-      return serviceURL + "Admin/LogAccesos/FeatureServer/1/applyedits";
-    },
-    read_luminarias(){
-      return serviceURL + "AP_Municipal/AP_MUNICIPAL/FeatureServer/1?f=json&token=" + token.read();
+      return serviceURL + "ADMIN/LogAccesos/FeatureServer/1/applyedits";
     },
     read_chqTramosBT(){
 
@@ -288,50 +211,10 @@ function myLayers(){
       }
     },
     read_rotulos(){
-
-        var e = cookieHandler.get('usrprfl');
-        empresa_ = e.EMPRESA;
-
-      switch (empresa_) {
-        case 'chilquinta':
-          return serviceURL + "Chilquinta_006/Nodos_006/MapServer?f=json&token=" + token.read();
-        break;
-        case 'litoral':
-          return serviceURL + "Chilquinta_009/Nodos_009/MapServer?f=json&token=" + token.read();
-        break;
-        case 'linares':
-          return serviceURL + "Chilquinta_031/Nodos_031/MapServer?f=json&token=" + token.read();
-        break;
-        case 'parral':
-            return serviceURL + "Chilquinta_032/Nodos_032/MapServer?f=json&token=" + token.read();
-        break;
-        case 'casablanca':
-            return serviceURL + "Chilquinta_028/Nodos_028/MapServer?f=json&token=" + token.read();
-        break;
-      }
+          return serviceURL + "STANDARD/Nodos/MapServer?f=json&token=" + token.read();
     },
     read_rotulos2(){
-
-        var e = cookieHandler.get('usrprfl');
-        empresa_ = e.EMPRESA;
-
-      switch (empresa_) {
-        case 'chilquinta':
           return serviceURL + "Chilquinta_006/Nodos_006/MapServer/0?f=json&token=" + token.read();
-        break;
-        case 'litoral':
-          return serviceURL + "Chilquinta_009/Nodos_009/MapServer/0?f=json&token=" + token.read();
-        break;
-        case 'linares':
-          return serviceURL + "Chilquinta_031/Nodos_031/MapServer/0?f=json&token=" + token.read();
-        break;
-        case 'parral':
-          return serviceURL + "Chilquinta_032/Nodos_032/MapServer/0?f=json&token=" + token.read();
-        break;
-        case 'casablanca':
-          return serviceURL + "Chilquinta_028/Nodos_028/MapServer/0?f=json&token=" + token.read();
-        break;
-      }
     },
     read_SSEE(){
 

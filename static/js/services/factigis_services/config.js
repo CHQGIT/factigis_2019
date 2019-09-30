@@ -1,7 +1,7 @@
 //v1.12p
 //24-07-2019 : E.H.R
 //DEV MODE, internal services.
-/*
+
 const env = {
   ROOT: "static/css/",
   CSSDIRECTORY: 'static/css/', //using
@@ -13,7 +13,7 @@ const env = {
   BUILDFOR: "INTERNA",
   SSL: 'https://'
 }
-*/
+
 //Dev mode, external services.
 /*
 const env = {
@@ -30,7 +30,7 @@ const env = {
 */
 
 //TEST MODE - INTERNO (pruebas factigis)
-
+/*
 const env = {
   ROOT: "css/",
   CSSDIRECTORY: 'css/', //using
@@ -42,7 +42,7 @@ const env = {
   BUILDFOR: "EXTERNA",
   SSL: 'https://'
 }
-
+*/
 /*
 //PROD MODE - EXTERNO sin ssl
 const env = {

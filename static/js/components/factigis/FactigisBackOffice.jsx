@@ -16,7 +16,7 @@ import jQuery from 'jquery';
 import {Navbar, Nav, NavItem, NavDropdown, DropdownButton,FormGroup,FormControl,MenuItem,Breadcrumb, CollapsibleNav} from 'react-bootstrap';
 import BasemapToggle from "esri/dijit/BasemapToggle";
 import _ from 'lodash';
-import {saveGisredLogin, getFormatedDate} from '../../services/login-service';
+import {saveGisredLogin, getFormatedDate, capitalize} from '../../services/login-service';
 import {factigis_findSedProperties, factigis_findRotuloProperties } from  '../../services/factigis_services/factigis_dynamicElementQuery';
 import {factigis_findRotulo} from '../../services/factigis_services/factigis_find-service';
 import { AppBar, Checkbox, IconButton } from 'react-toolbox';
@@ -401,7 +401,8 @@ class FactigisBackOffice extends React.Component {
   }
 
   componentDidMount(){
-      const user = cookieHandler.get('usrprfl')
+    var user = cookieHandler.get('usrprfl');
+    var empresaCapitalized = capitalize(user.EMPRESA.toString());
 
   /*  var d = cookieHandler.get('wllExp');
       if(d > getFormatedDate()){
@@ -452,7 +453,7 @@ class FactigisBackOffice extends React.Component {
       layerRotulos.setImageFormat("png32");
       layerRotulos.setVisibleLayers([0]);
       var layerDefs = [];
-      layerDefs[0] = "tipo_nodo ='ele!poste' or tipo_nodo='ele!camara'";
+      layerDefs[0] = "tipo_nodo ='ele!poste' or tipo_nodo='ele!camara' and nm_empresa='"+ empresaCapitalized +"'";
       layerRotulos.setLayerDefinitions(layerDefs);
       mapp.addLayer(layerRotulos);
 

@@ -5,6 +5,14 @@ import createQueryTask from '../services/createquerytask-service';
 import cookieHandler from 'cookie-handler';
 import env from '../services/factigis_services/config';
 import dateFormat from 'dateformat';
+import kernel from "esri/kernel";
+
+
+function capitalize(s){
+  return s.toLowerCase().replace( /\b./g, function(a){ return a.toUpperCase(); } );
+};
+
+
 
 function getFormatedDate(){
   var d = new Date();
@@ -44,8 +52,8 @@ function saveGisredLogin(user, fech, page, mod, tkn){
     data: data
   })
   .done(d =>{
-    //console.log(d,"pase");
-    console.log("")
+    console.log(d,"pase");
+    //console.log("")
   })
   .fail(f=>{
     console.log(f,"no pase");
@@ -59,8 +67,9 @@ function getUserPermission(user, token, callback){
       url: myLayers.read_logAccess(),
       whereClause: "usuario='"+ user + "' AND plataforma='WEB' AND aplicacion='FACTIGIS'"
     });
-
+    console.log(user,token, myLayers.read_logAccess(),"asd", getPermission)
     getPermission((map, featureSet) => {
+    
       if(!featureSet.features){
         return callback("NOPERMISSIONS");
       }
@@ -88,24 +97,26 @@ function getUserPermission(user, token, callback){
 }
 
 function factigisLogin(user,pass, callback2){
+
   const url = myLayers.read_tokenURL();
 
-  const data = {
-    username: user,
-    password: pass,
-    client: 'requestip',
-    expiration: 1440,
-    format: 'jsonp'
-  };
+  const data = {  
+      "username": user,  
+      "password": pass,  
+      "expiration": 1440,  
+      "referer": "http://localhost:443/",  
+      "f": "json"  
+  };  
 
   $.ajax({
     method: 'POST',
     url: url,
     data: data,
-    dataType: 'html'
+    dataType: 'json'
   })
   .done(myToken => {
-    if(myToken.indexOf('Exception') >= 0) {
+    console.log(myToken,"tokeen")
+    /*if(myToken.indexOf('Exception') >= 0) {
       notifications('Login incorrecto, intente nuevamente.', 'Login_Error', '.notification-login');
       return callback([false,false,'Login incorrecto, intente nuevamente.']);
     }
@@ -113,80 +124,86 @@ function factigisLogin(user,pass, callback2){
       notifications('Login incorrecto, intente nuevamente.', 'Login_Error', '.notification-login');
       return callback([false,false,'Login incorrecto, intente nuevamente.']);
     }
-    //IF EVERYTHING IS OK , GOING TO:
-    console.log('writing token into system', myToken);
-    token.write(myToken);
-    cookieHandler.set('wllExp',getFormatedDateExp());
-    //if the login is correct. Get user permission:
-    getUserPermission(user, myToken, (UserPermissions)=>{
+    */
+    if(myToken.error){
+      return callback([false,false,'Login incorrecto, intente nuevamente.']);
+    }else{
+
+      //IF EVERYTHING IS OK , GOING TO:
+      console.log('writing token into system', myToken.token);
+      token.write(myToken.token);
+      cookieHandler.set('wllExp',getFormatedDateExp());
+      //if the login is correct. Get user permission:
+      getUserPermission(user, myToken.token, (UserPermissions)=>{
+       
       console.log(UserPermissions)
+     
+          if(!UserPermissions.length){
+            console.log('User doesnt have permissions for any application, dashboard empty...');
+            notifications("Usuario sin permisos","Login_Error", ".notification-login");
+            return callback2([false,false,'Usuario sin permisos. ']);
+          }else{
+            console.log('User has permissions...requesting service access and login in to FACTIGIS_DASHBOARD');
 
-        if(!UserPermissions.length){
-          console.log('User doesnt have permissions for any application, dashboard empty...');
-          notifications("Usuario sin permisos","Login_Error", ".notification-login");
-          return callback2([false,false,'Usuario sin permisos. ']);
-        }else{
-          console.log('User has permissions...requesting service access and login in to FACTIGIS_DASHBOARD');
+            token.write(myToken.token);
+            cookieHandler.set('usrprmssns',UserPermissions);
 
-          token.write(myToken);
-          cookieHandler.set('usrprmssns',UserPermissions);
-
-          let profiles = [];
-          profiles = UserPermissions.map(permission=>{
-            return permission.module;
-          });
+            let profiles = [];
+            profiles = UserPermissions.map(permission=>{
+              return permission.module;
+            });
 
 
-          let goesTo = profiles.filter(profile =>{
-            return profile == "REVISAR_FACTIBILIDAD" || profile=="REVISAR_HISTORIAL_FACTIBILIDAD";
-          });
-          console.log("encontrado perfil",goesTo);
+            let goesTo = profiles.filter(profile =>{
+              return profile == "REVISAR_FACTIBILIDAD" || profile=="REVISAR_HISTORIAL_FACTIBILIDAD";
+            });
+            console.log("encontrado perfil",goesTo);
 
-          //va a dashboard o factigis directamente dependiendo permisos del usuario para los modulos y widgets.
-            if(!goesTo.length){
-              const page = env.SAVEAPPLICATIONNAME;
-              const module = "FACTIGIS_CREAR_FACTIBILIDAD";
-              const date = getFormatedDate();
+            //va a dashboard o factigis directamente dependiendo permisos del usuario para los modulos y widgets.
+              if(!goesTo.length){
+                const page = env.SAVEAPPLICATIONNAME;
+                const module = "FACTIGIS_CREAR_FACTIBILIDAD";
+                const date = getFormatedDate();
 
-              //saveGisredLogin(user,date,page,module,myToken);
-              notifications("Logging in...","Login_Success", ".notification-login");
+                //saveGisredLogin(user,date,page,module,myToken);
+                notifications("Logging in...","Login_Success", ".notification-login");
+                  getProfile(user, userProfile =>{
+                      console.log("esto llega",userProfile);
+                    if(!userProfile.length){
+                      console.log("El usuario no posee un perfil para el modulo");
+                      return callback2([false,false,'El usuario no posee un perfil para el modulo...']);
+                    }
+
+
+                  cookieHandler.set('usrprfl',userProfile[0].attributes);
+                  return callback2([true,true,'Iniciando sesión...',"factigis.html"]);
+                  //window.location.href = "factigis.html";
+                  });
+
+              }else{
+                //Save that the user is in dashboard
+                const page = env.SAVEAPPLICATIONNAME;
+                const module = "FACTIGIS_DASHBOARD";
+                const date = getFormatedDate();
+
+                saveGisredLogin(user,date,page,module,myToken.token);
+                notifications("Logging in...","Login_Success", ".notification-login");
                 getProfile(user, userProfile =>{
                     console.log("esto llega",userProfile);
                   if(!userProfile.length){
                     console.log("El usuario no posee un perfil para el modulo");
-                    return callback2([false,false,'El usuario no posee un perfil para el modulo...']);
+                    return callback2([true,false,'El usuario no posee un perfil para el modulo...']);
                   }
-
-
-                cookieHandler.set('usrprfl',userProfile[0].attributes);
-                return callback2([true,true,'Iniciando sesión...',"factigis.html"]);
-                //window.location.href = "factigis.html";
+                  cookieHandler.set('usrprfl',userProfile[0].attributes);
+                  return callback2([true,true,'Iniciando sesión...',"factigisDashboard.html"]);
+                  //window.location.href = "factigisDashboard.html";
                 });
 
-            }else{
-              //Save that the user is in dashboard
-              const page = env.SAVEAPPLICATIONNAME;
-              const module = "FACTIGIS_DASHBOARD";
-              const date = getFormatedDate();
 
-              saveGisredLogin(user,date,page,module,myToken);
-              notifications("Logging in...","Login_Success", ".notification-login");
-              getProfile(user, userProfile =>{
-                  console.log("esto llega",userProfile);
-                if(!userProfile.length){
-                  console.log("El usuario no posee un perfil para el modulo");
-                  return callback2([true,false,'El usuario no posee un perfil para el modulo...']);
-                }
-                cookieHandler.set('usrprfl',userProfile[0].attributes);
-                return callback2([true,true,'Iniciando sesión...',"factigisDashboard.html"]);
-                //window.location.href = "factigisDashboard.html";
-              });
-
-
-            }
-        }
-    });
-
+              }
+          }
+      });
+    }
   })
   .fail(error => {
     console.log("Problem:" , error);
@@ -214,4 +231,4 @@ function getProfile (user, userProfile){
   });
 
 }
-export { saveGisredLogin, factigisLogin,getFormatedDate };
+export { saveGisredLogin, factigisLogin,getFormatedDate, capitalize };

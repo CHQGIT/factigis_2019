@@ -9,7 +9,7 @@ import cookieHandler from 'cookie-handler';
 import BasemapToggle from "esri/dijit/BasemapToggle";
 import {Navbar, Nav, NavItem, NavDropdown, DropdownButton,FormGroup,FormControl, MenuItem,Breadcrumb, CollapsibleNav} from 'react-bootstrap';
 import Search from 'esri/dijit/Search';
-import {saveGisredLogin, getFormatedDate} from '../../services/login-service';
+import {saveGisredLogin, getFormatedDate, capitalize} from '../../services/login-service';
 import { AppBar, Checkbox, IconButton } from 'react-toolbox';
 import { Layout, NavDrawer, Panel, Sidebar } from 'react-toolbox';
 import env from '../../services/factigis_services/config';
@@ -17,6 +17,8 @@ import {Button} from 'react-toolbox/lib/button';
 /**
  * @class La clase Factigis crea nuevas instancias con un radio y altura determinada
  */
+
+
 class Factigis extends React.Component {
   constructor(props){
     super(props);
@@ -46,8 +48,10 @@ class Factigis extends React.Component {
   }
   //Agrega los layers para ser mostrados.
   componentDidMount(){
-    const user = cookieHandler.get('usrprfl')
-    console.log(user,"didmount factigis", user.EMPRESA);
+    var user = cookieHandler.get('usrprfl');
+    var empresaCapitalized = capitalize(user.EMPRESA.toString());
+    console.log(empresaCapitalized,"capitalized")
+   
     var mapp = mymap.createMap("factigis_map_div","topo",-71.2905 ,-33.1009,9);
     this.setState({themap: mapp});
 
@@ -63,13 +67,14 @@ class Factigis extends React.Component {
     layerDireccionesNew.setImageFormat("png32");
     layerDireccionesNew.setVisibleLayers([2]);
     mapp.addLayer(layerDireccionesNew);
-
+  
     // add layer for pipes
     var layerRotulos = new esri.layers.ArcGISDynamicMapServiceLayer(layers.read_rotulos(),{id:"factigis_rotulos"});
+    console.log(user.EMPRESA,"empresa?")
     layerRotulos.setImageFormat("png32");
     layerRotulos.setVisibleLayers([0]);
     var layerDefs = [];
-    layerDefs[0] = "tipo_nodo ='ele!poste' or tipo_nodo='ele!camara'";
+    layerDefs[0] = "tipo_nodo ='ele!poste' or tipo_nodo='ele!camara' and nm_empresa='"+ empresaCapitalized +"'";
     layerRotulos.setLayerDefinitions(layerDefs);
     mapp.addLayer(layerRotulos,2);
 
